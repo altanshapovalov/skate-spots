@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Карта скейт точек</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body { margin: 0; padding: 0; font-family: sans-serif; }
+    #map { height: 100vh; }
+    .popup-img { width: 200px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  // Инициализация карты: центр и зум
+  var map = L.map('map').setView([55.75, 37.61], 11); // Москва по умолчанию
+
+  // Подложка карты (OpenStreetMap)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Пример данных одной точки
+  var skateSpots = [
+    {
+      name: "Красная площадь",
+      coords: [55.7539, 37.6208],
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/RedSquare_%28pixinn.net%29.jpg/640px-RedSquare_%28pixinn.net%29.jpg",
+      description: "Площадка для флет трюков, охрана строгая!"
+    },
+    {
+      name: "Горький парк",
+      coords: [55.7298, 37.6031],
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Gorky_Park_Moscow.jpg/640px-Gorky_Park_Moscow.jpg",
+      description: "Отличный спот с гладким покрытием."
+    }
+  ];
+
+  // Добавление маркеров на карту
+  skateSpots.forEach(function(spot) {
+    var marker = L.marker(spot.coords).addTo(map);
+    var popupContent = `<b>${spot.name}</b><br>
+                        <img src="${spot.image}" class="popup-img"><br>
+                        ${spot.description}`;
+    marker.bindPopup(popupContent);
+  });
+</script>
+
+</body>
+</html>
