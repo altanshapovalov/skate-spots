@@ -1,6 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Карта скейт-точек с индексом</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body, html { margin: 0; height: 100%; font-family: sans-serif; }
+    #container { display: flex; height: 100vh; }
+    #list {
+      width: 300px;
+      overflow-y: auto;
+      border-right: 1px solid #ccc;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    #map {
+      flex-grow: 1;
+    }
+    .spot-item {
+      cursor: pointer;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    .spot-item img {
+      width: 100%;
+      border-radius: 6px;
+    }
+    .spot-name {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <div id="list"></div>
+  <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  // Данные скейт-точек
+  var skateSpots = [
+    {
+      name: "Красная площадь",
+      coords: [55.7539, 37.6208],
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/RedSquare_%28pixinn.net%29.jpg/320px-RedSquare_%28pixinn.net%29.jpg",
+      description: "Площадка для флет трюков, охрана строгая!"
+    },
+    {
+      name: "Горький парк",
+      coords: [55.7298, 37.6031],
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Gorky_Park_Moscow.jpg/320px-Gorky_Park_Moscow.jpg",
+      description: "Отличный спот с гладким покрытием."
+    }
+  ];
+
+  // Инициализация карты с центром (Москва)
+  var map = L.map('map').setView([55.75, 37.61], 11);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Создадим маркеры и всплывашки
+  var markers = [];
+
+  skateSpots.forEach(function(spot, index) {
+    var marker = L.marker(spot.coords).addTo(map);
+    var popupContent = `<b>${spot.name}</b><br>
+                        <img src="${spot.image}" style="width:200px; border-radius:6px;"><br>
+                        ${spot.description}`;
+    marker.bindPopup(popupContent);
+    markers.push(marker);
+  });
+
+  // Создадим список слева
+  var listDiv = document.getElementById('list');
+  skateSpots.forEach(function(spot, index) {
+    var item = document.createElement('div');
+    item.className = 'spot-item';
+    item.innerHTML = `
+      <img src="${spot.image}" alt="${spot.name}">
+      <div class="spot-name">${spot.name}</div>
+    `;
+
+    // При клике по элементу списка:
+    item.onclick = function() {
+      map.setView(spot.coords, 14, {animate: true});
+      markers[index].openPopup();
+    };
+
+    listDiv.appendChild(item);
+  });
+</script>
+
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
   <title>Карта скейт точек</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,3 +164,4 @@
 
 </body>
 </html>
+ -->
